@@ -1,0 +1,21 @@
+<div class="login-container">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <h2>Inicio de Sesión</h2>
+      
+      <div class="form-group">
+        <label for="claveUsuario">Clave de Usuario:</label>
+        <input 
+          type="text" 
+          id="claveUsuario" 
+          formControlName="claveUsuario"
+          placeholder="Ingresa tu clave de usuario"
+        >
+        <div *ngIf="loginForm.get('claveUsuario')?.invalid && loginForm.get('claveUsuario')?.touched"
+             class="error-message">
+          La clave de usuario es requerida
+        </div>
+      </div>
+  
+      <button type="submit" [disabled]="!loginForm.valid">Ingresar</button>
+    </form>
+  </div>

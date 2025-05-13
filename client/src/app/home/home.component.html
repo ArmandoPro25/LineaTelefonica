@@ -1,0 +1,23 @@
+<div class="home-container">
+    <h1>Bienvenido, {{ user?.NombreUsuario }}</h1>
+    
+    <div class="user-info">
+      <p><strong>Clave de usuario:</strong> {{ user?.ClaveUsuario }}</p>
+      <p><strong>Fecha de registro:</strong> {{ user?.FechaRegistro | date }}</p>
+      <p><strong>Fecha de nacimiento:</strong> {{ user?.FechaNacimiento | date }}</p>
+      <p><strong>Teléfonos:</strong></p>
+      <ul>
+        <li *ngFor="let tel of user?.Telefono">{{ tel }}</li>
+      </ul>
+    </div>
+    <button routerLink="/registrar-llamada">Registrar Nueva Llamada</button>
+    <button routerLink="/ver-llamadas" class="btn-ver-llamadas">
+        Ver Registros de Llamadas
+      </button>
+
+      <button mat-raised-button color="accent" routerLink="/registrar-telefono">
+        Registrar Nuevo Teléfono
+      </button>
+  
+    <button (click)="logout()">Cerrar sesión</button>
+  </div>

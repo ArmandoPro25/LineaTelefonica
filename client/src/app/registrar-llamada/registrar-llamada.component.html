@@ -1,0 +1,120 @@
+<div class="registro-container">
+    <h2>Registrar Nueva Llamada</h2>
+    <button class="btn-volver" (click)="cancelar()">← Volver al inicio</button>
+  
+    <form [formGroup]="formulario" (ngSubmit)="enviarRegistro()">
+      <!-- Sección de búsqueda dentro del formulario -->
+      <div class="busqueda-usuario">
+        <input 
+          type="text" 
+          placeholder="Buscar usuario por clave o nombre"
+          formControlName="busqueda"
+        >
+        
+        <div class="resultados-busqueda">
+          <div *ngIf="usuariosEncontrados.length === 0 && formulario.get('busqueda')?.value?.length >= 2" 
+               class="mensaje-vacio">
+            No se encontraron coincidencias
+          </div>
+          
+          <div *ngFor="let usuario of usuariosEncontrados"
+               (click)="seleccionarUsuario(usuario)"
+               class="resultado-item">
+            {{ usuario.ClaveUsuario }} - {{ usuario.NombreUsuario }}
+          </div>
+        </div>
+      </div>
+  
+      <!-- Campos del formulario -->
+      <div class="form-group">
+        <label>Teléfono del usuario:</label>
+        <select formControlName="telefono" required>
+          <option value="" disabled>Seleccione un teléfono</option>
+          <option *ngFor="let tel of telefonosUsuario" [value]="tel">
+            {{ tel }}
+          </option>
+        </select>
+        <small *ngIf="formulario.get('telefono')?.invalid && formulario.get('telefono')?.touched" class="error">
+          Este campo es requerido
+        </small>
+      </div>
+
+      <!-- Campo Número Marcado -->
+      <div class="form-group"> <!-- Apertura del div -->
+        <label>Número marcado:</label>
+        <input 
+          type="number" 
+          formControlName="numeroMarcado" 
+          placeholder="10 dígitos del número marcado"
+          min="1000000000"
+          max="9999999999"
+          required
+        >
+        <small *ngIf="formulario.get('numeroMarcado')?.invalid && formulario.get('numeroMarcado')?.touched" class="error">
+          Debe ser un número de 10 dígitos
+        </small>
+      </div> <!-- Cierre faltante añadido aquí -->
+
+      <div class="form-group">
+        <label>Tipo de llamada:</label>
+        <select 
+          formControlName="tipoLlamada"
+          (change)="calcularTotal()"
+          required
+        >
+          <option value="" disabled>Seleccione un tipo</option>
+          <option *ngFor="let tipo of tiposLlamada" [value]="tipo._id">
+            {{ tipo.nombre }} ({{ tipo.costoPorMinuto | currency:'MXN' }})
+          </option>
+        </select>
+        <small *ngIf="formulario.get('tipoLlamada')?.invalid && formulario.get('tipoLlamada')?.touched" class="error">
+          Este campo es requerido
+        </small>
+      </div>
+  
+      <div class="form-group">
+        <label>Minutos utilizados:</label>
+        <input 
+          type="number" 
+          formControlName="minutos"
+          (input)="calcularTotal()"
+          min="1"
+          required
+        >
+        <small *ngIf="formulario.get('minutos')?.errors?.['required'] && formulario.get('minutos')?.touched" class="error">
+          Este campo es requerido
+        </small>
+        <small *ngIf="formulario.get('minutos')?.errors?.['min']" class="error">
+          Mínimo 1 minuto
+        </small>
+      </div>
+  
+      <div class="form-group">
+        <label>Fecha y hora de la llamada:</label>
+        <input 
+          type="datetime-local" 
+          formControlName="fecha"
+          required
+        >
+        <small *ngIf="formulario.get('fecha')?.invalid && formulario.get('fecha')?.touched" class="error">
+          Este campo es requerido
+        </small>
+      </div>
+  
+      <div class="total">
+        <h3>Total a pagar:</h3>
+        <p>{{ total | currency:'MXN':'symbol':'1.2-2' }}</p>
+      </div>
+  
+      <div class="botones">
+        <button type="button" class="btn-cancelar" (click)="cancelar()">Cancelar</button>
+        <button 
+          type="submit" 
+          class="btn-guardar" 
+          [disabled]="!formulario.valid"
+        >
+          Registrar Llamada
+        </button>
+      </div>
+    </form>
+  </div>
